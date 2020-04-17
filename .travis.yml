@@ -1,0 +1,138 @@
+language: cpp
+os: linux
+dist: bionic
+script: cmake
+sudo: false
+
+git:
+  depth: 1
+
+env:
+  global:
+    - CMAKE_VERSION=3.13.4
+    - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
+    - CMAKE_DIR=${DEPS_DIR}/cmake-${CMAKE_VERSION}
+
+cache:
+  apt: true
+  directories:
+    - ${CMAKE_DIR}
+
+addons: &gcc5
+  apt:
+    packages:
+      - g++-5
+    sources:
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+
+addons: &gcc9
+  apt:
+    packages:
+      - g++-9
+    sources:
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+
+addons: &clang5
+  apt:
+    packages:
+      - clang-5.0
+      - llvm-5.0
+      - lld-5.0
+    sources:
+      - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-5.0 main'
+        key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+
+addons: &clang9
+  apt:
+    packages:
+      - clang-9
+      - llvm-9
+      - lld-9
+    sources:
+      - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
+        key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+
+matrix:
+  include:
+    - compiler: gcc
+      env:
+        - GCC_VERSION=5
+        - CXX_STANDARD=14
+      addons: *gcc5
+
+    - compiler: gcc
+      env:
+        - GCC_VERSION=9
+        - CXX_STANDARD=14
+      addons: *gcc9
+
+    - compiler: gcc
+      env:
+        - GCC_VERSION=9
+        - CXX_STANDARD=17
+      addons: *gcc9
+
+    - compiler: clang
+      env:
+        - CLANG_VERSION=5.0
+        - CXX_STANDARD=14
+      addons: *clang5
+
+    - compiler: clang
+      env:
+        - CLANG_VERSION=9
+        - CXX_STANDARD=14
+      addons: *clang9
+
+    - compiler: clang
+      env:
+        - CLANG_VERSION=9
+        - CXX_STANDARD=17
+      addons: *clang9
+
+install:
+  # Set C++ compiler
+  - |
+    if [ -n "${GCC_VERSION}" ]; then
+      export CXX="g++-${GCC_VERSION}"
+      export LDFLAGS="-fuse-ld=gold"
+      CMAKE_OPTIONS+=" -DGCOV_EXECUTABLE=$(which gcov-${GCC_VERSION})"
+    fi
+  - |
+    if [ -n "${CLANG_VERSION}" ]; then
+      export CXX="clang++-${CLANG_VERSION}"
+      export LDFLAGS="-fuse-ld=lld"
+      CMAKE_OPTIONS+=" -DLLVM_COV_EXECUTABLE=$(which llvm-cov-${CLANG_VERSION})"
+    fi
+  # Install CMake
+  - |
+    if [ -f ${CMAKE_DIR}/cached ]; then
+      echo "Using cached cmake version ${CMAKE_VERSION}."
+    else
+      CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
+      mkdir -p ${CMAKE_DIR}
+      travis_retry wget --no-check-certificate --quiet -O - "${CMAKE_URL}" | tar -xz --strip-components=1 --directory=${CMAKE_DIR}
+      touch ${CMAKE_DIR}/cached
+    fi
+    export PATH="${CMAKE_DIR}/bin:${PATH}"
+  # Install GCovr
+  - pip install --user gcovr
+  # Print required programs
+  - which $CXX && $CXX --version
+  - which cmake && cmake --version
+  - which gcovr && gcovr --version
+
+script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir -p build && cd build
+  - |
+    cmake .. \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_STANDARD=${CXX_STANDARD} \
+    ${CMAKE_OPTIONS}
+  - make check
+  - DESTDIR=${TRAVIS_BUILD_DIR}/build/pkg make install
+  - make package
+
+notifications:
+  email: false

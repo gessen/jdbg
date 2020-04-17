@@ -1,0 +1,43 @@
+# Build directories
+/build*/
+
+# CMake
+/CMakeCache.txt
+/CMakeDoxyfile.in
+/CMakeDoxygenDefaults.cmake
+/CMakeFiles/
+/CMakeScripts/
+/cmake_install.cmake
+/compile_commands.json
+/install_manifest.txt
+
+# CTest
+/Testing/
+/CTestTestfile.cmake
+/DartConfiguration.tcl
+
+# CPack
+/CPackConfig.cmake
+/CPackSourceConfig.cmake
+
+# Visual Studio Code
+/.settings/
+/.vscode/
+
+# ccls
+/.ccls-cache/
+
+# clangd
+/.clangd/
+
+# GDB
+/.gdb_history
+
+# Unneeded in container
+/.git
+/.gitignore
+/.gitattributes
+/.travis.yml
+/Dockerfile
+/docker-compose
+/.dockerignore
