@@ -82,9 +82,10 @@ add_custom_target(${check_target}
 
 if(JDBG_ENABLE_COVERAGE)
   include(AddCoverage)
-  setup_coverage(${check_target}
+  setup_coverage(
+    POST_TARGET ${check_target}
     EXCLUDE
-      '${PROJECT_SOURCE_DIR}/build/*'
-      '${PROJECT_SOURCE_DIR}/tests/*'
+      "${PROJECT_SOURCE_DIR}/build/"
+      "${PROJECT_SOURCE_DIR}/tests/"
   )
 endif()
