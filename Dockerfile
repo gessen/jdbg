@@ -10,7 +10,9 @@ RUN apt-get update \
     git \
     lcov \
     make \
-    ninja-build
+    meson \
+    ninja-build \
+    pkg-config
 
 # Clang stuff
 RUN apt-get update \
