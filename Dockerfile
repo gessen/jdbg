@@ -1,6 +1,7 @@
 FROM debian:unstable-slim
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+    catch2 \
     cmake \
     dpkg-dev \
     file \
