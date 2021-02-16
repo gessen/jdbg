@@ -1,7 +1,7 @@
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "Jacek Swierk")
 set(CPACK_PACKAGE_CONTACT "Jacek Swierk <jacek.swierk@gmail.com>")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Jacek's debugging macro")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A helpful debugging macro")
 set(CPACK_PROJECT_URL "https://github.com/gessen/jdbg")
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})

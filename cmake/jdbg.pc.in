@@ -2,6 +2,7 @@ prefix=@CMAKE_INSTALL_PREFIX@
 includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
 
 Name: @PROJECT_NAME@
-Description: Jacek's debugging macro
+Description: A helpful debugging macro
+URL: https://github.com/gessen/@PROJECT_NAME@
 Version: @PROJECT_VERSION@
-Cflags: -I${includedir}
+Cflags: -I${includedir} @PKG_CONFIG_DEFINES@
