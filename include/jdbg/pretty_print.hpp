@@ -226,7 +226,13 @@ pretty_print(std::ostream& os, const Container& val)
 
   if (b != e) {
     pretty_print(os, *(b++));
+    constexpr std::size_t max_size = 10;
+    std::size_t current_size = 1;
     for (; b != e; ++b) {
+      if (++current_size > max_size) {
+        os << ", ... size: " << detail::size(val);
+        break;
+      }
       os << ", ";
       pretty_print(os, *b);
     }

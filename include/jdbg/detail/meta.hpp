@@ -33,8 +33,21 @@ template <template <typename...> class Op, typename... Args>
 using is_detected = typename detector<nonesuch, void, Op, Args...>::value_type;
 
 template <typename T>
+constexpr auto size(const T& c) -> decltype(c.size())
+{
+  return c.size();
+}
+
+template <typename T, std::size_t N>
+constexpr std::size_t size(const T (&/*unused*/)[N])
+{
+  return N;
+}
+
+template <typename T>
 using container_t =
-    decltype(std::begin(std::declval<T&>()), std::end(std::declval<T&>()));
+    decltype(std::begin(std::declval<T&>()), std::end(std::declval<T&>()),
+             jdbg::detail::size(std::declval<T&>()));
 
 template <typename T>
 using ostream_operator_t =

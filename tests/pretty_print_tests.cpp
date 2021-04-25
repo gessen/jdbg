@@ -48,6 +48,7 @@ struct my_container {
   T data[N];
   const T* begin() const { return data; }
   const T* end() const { return data + N; }
+  std::size_t size() const { return N; }
 };
 
 } // namespace
@@ -89,6 +90,9 @@ TEST_CASE("pretty print")
     using namespace std::string_literals;
     CHECK_THAT(pretty_print(std::vector<int>{}), Equals("[<empty>]"));
     CHECK_THAT(pretty_print(std::vector<int>{1, 2, 3}), Equals("[1, 2, 3]"));
+    CHECK_THAT(
+        pretty_print(std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}),
+        Equals("[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ... size: 11]"));
     CHECK_THAT(pretty_print(std::vector<std::string>{"one", "two", "three"}),
                Equals("[\"one\", \"two\", \"three\"]"));
     const std::vector<std::vector<std::vector<int>>> v{
