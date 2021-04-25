@@ -2,6 +2,8 @@ catch_dep = dependency('catch2')
 
 jdbg_tests_src = [
   'jdbg_tests.cpp',
+  'pretty_print_tests.cpp',
+  'type_name_tests.cpp',
   'main.cpp',
 ]
 

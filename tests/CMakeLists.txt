@@ -58,6 +58,8 @@ set_target_properties(${PROJECT_NAME}-tests
 target_sources(${PROJECT_NAME}-tests
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/jdbg_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/pretty_print_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/type_name_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
