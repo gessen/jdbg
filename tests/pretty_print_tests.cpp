@@ -3,9 +3,9 @@
 #include <catch2/catch.hpp>
 
 #include <map>
+#include <memory>
 #include <sstream>
 #include <string>
-#include <memory>
 #include <tuple>
 #include <utility>
 #include <vector>

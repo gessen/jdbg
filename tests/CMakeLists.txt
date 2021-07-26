@@ -75,9 +75,6 @@ endif()
 set(check_target_depends ${PROJECT_NAME}-tests)
 add_custom_target(${check_target}
   COMMAND ${CMAKE_CTEST_COMMAND}
-          --force-new-ctest-process
-          --output-on-failure
-          --progress
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
   DEPENDS ${check_target_depends}
 )
