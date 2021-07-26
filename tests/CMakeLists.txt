@@ -63,6 +63,18 @@ target_sources(${PROJECT_NAME}-tests
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
+if (COMMAND target_precompile_headers)
+  configure_file(
+    "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}_pch.hpp.in"
+    "${PROJECT_BINARY_DIR}/${PROJECT_NAME}_pch.hpp"
+    @ONLY
+  )
+  target_precompile_headers(${PROJECT_NAME}-tests
+    PRIVATE
+      "${PROJECT_BINARY_DIR}/${PROJECT_NAME}_pch.hpp"
+  )
+endif()
+
 include(Catch)
 catch_discover_tests(${PROJECT_NAME}-tests)
 
