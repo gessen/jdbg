@@ -1,6 +1,7 @@
 #pragma once
 
 #include <jdbg/detail/meta.hpp>
+#include <jdbg/reflect_struct.hpp>
 
 #include <iomanip>
 #include <memory>
@@ -15,20 +16,35 @@
 #endif
 
 namespace jdbg {
+namespace detail {
 
 template <typename T>
-void pretty_print(std::ostream& os, const T& val, std::true_type /*true*/)
+void pretty_print_reflected(std::ostream& os, const T& val,
+                            std::true_type /*true*/);
+
+template <typename T>
+void pretty_print_reflected(std::ostream& /*os*/, const T& /*val*/,
+                            std::false_type /*false*/)
+{
+  static_assert(
+      detail::has_ostream_operator<T>::value,
+      "This type does not support the ostream operator<< nor is reflected");
+}
+
+template <typename T>
+void pretty_print_impl(std::ostream& os, const T& val, std::true_type /*true*/)
 {
   os << val;
 }
 
 template <typename T>
-void pretty_print(std::ostream& /*os*/, const T& /*val*/,
-                  std::false_type /*false*/)
+void pretty_print_impl(std::ostream& os, const T& val,
+                       std::false_type /*false*/)
 {
-  static_assert(detail::has_ostream_operator<T>::value,
-                "This type does not support the ostream operator<<");
+  pretty_print_reflected(os, val, is_struct_reflectable<T>{});
 }
+
+} // namespace detail
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -94,7 +110,7 @@ std::enable_if_t<!detail::is_container<T>::value && !std::is_enum<T>::value,
                  void>
 pretty_print(std::ostream& os, const T& val)
 {
-  pretty_print(os, val, detail::has_ostream_operator<T>{});
+  detail::pretty_print_impl(os, val, detail::has_ostream_operator<T>{});
 }
 
 inline void pretty_print(std::ostream& os, const bool& val)
@@ -263,4 +279,22 @@ void pretty_print(std::ostream& os, const std::variant<Ts...>& val)
 }
 #endif
 
+namespace detail {
+
+template <typename T>
+void pretty_print_reflected(std::ostream& os, const T& val,
+                            std::true_type /*true*/)
+{
+  const int fields_count = struct_reflector<T>::total_count();
+  int n = 0;
+  visit_struct(val, [&](const char* name, const auto& field) {
+    os << name << ": ";
+    pretty_print(os, field);
+    if (++n < fields_count) {
+      os << ", ";
+    }
+  });
+}
+
+} // namespace detail
 } // namespace jdbg

@@ -38,6 +38,11 @@ std::ostream& operator<<(std::ostream& os, const my_struct& ms)
   return os;
 }
 
+struct my_struct_reflected {
+  std::shared_ptr<int> x;
+  std::vector<double> y;
+};
+
 enum class my_enum {
   e1 = 13,
   e2 = 37,
@@ -52,6 +57,8 @@ struct my_container {
 };
 
 } // namespace
+
+JDBG_REFLECT_STRUCT(my_struct_reflected, x, y);
 
 TEST_CASE("pretty print")
 {
@@ -172,6 +179,13 @@ TEST_CASE("pretty print")
   {
     my_struct ms{9001};
     CHECK_THAT(pretty_print(ms), Equals("my_struct{9001}"));
+  }
+
+  SECTION("user defined type reflected")
+  {
+    my_struct_reflected ms{std::make_shared<int>(10), {1.1, 2.2}};
+    CHECK_THAT(pretty_print(ms), StartsWith("x: "));
+    CHECK_THAT(pretty_print(ms), EndsWith(" -> 10 (refs: 1), y: [1.1, 2.2]"));
   }
 
   SECTION("user defined enum")

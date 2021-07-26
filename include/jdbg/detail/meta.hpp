@@ -69,5 +69,41 @@ struct is_container<std::basic_string_view<Ch, Tr>> : std::false_type {};
 template <typename T>
 struct has_ostream_operator : is_detected<ostream_operator_t, T> {};
 
+template <typename T>
+struct always_false : std::false_type {};
+
+template <typename T>
+struct remove_cvref {
+  using type = std::remove_cv_t<std::remove_reference_t<T>>;
+};
+
+template <typename T>
+using remove_cvref_t = typename remove_cvref<T>::type;
+
+template <std::size_t N, typename Head, typename... Tail>
+struct at_type {
+  static_assert(N < 1 + sizeof...(Tail), "invalid arg index");
+  using type = typename at_type<N - 1, Tail...>::type;
+};
+
+template <typename Head, typename... Tail>
+struct at_type<0, Head, Tail...> {
+  using type = Head;
+};
+
+template <std::size_t N, typename... Args>
+using at_type_t = typename at_type<N, Args...>::type;
+
+template <typename... Ts>
+struct type_pack : std::integral_constant<std::size_t, sizeof...(Ts)> {
+  template <std::size_t N>
+  struct extract {
+    using type = at_type_t<N, Ts...>;
+  };
+
+  template <std::size_t N>
+  using extract_t = typename extract<N>::type;
+};
+
 } // namespace detail
 } // namespace jdbg
