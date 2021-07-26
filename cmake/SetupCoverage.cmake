@@ -6,21 +6,16 @@ if(JDBG_ENABLE_COVERAGE)
   endif()
 endif()
 
-function(_normalise_paths paths)
+function(_normalise_paths_gcovr_realpath paths)
   set(new_paths)
   foreach(path IN LISTS ${paths})
-    # Get rid of trailing slash with directories
-    file(TO_CMAKE_PATH "${path}" path)
-
-    # Convert to absolute path to resolve symlinks and find out whether the
-    # path is a directory
     if(NOT IS_ABSOLUTE "${path}")
-      get_filename_component(path "${path}"
-        ABSOLUTE
-        BASE_DIR "${PROJECT_SOURCE_DIR}"
-      )
+      list(APPEND new_paths "${path}")
+      continue()
     endif()
 
+    # Get rid of trailing slash with directories
+    file(TO_CMAKE_PATH "${path}" path)
     # Resolve symlinks
     get_filename_component(path ${path} REALPATH)
 
@@ -29,7 +24,7 @@ function(_normalise_paths paths)
   set(${paths} ${new_paths} PARENT_SCOPE)
 endfunction()
 
-function(_normalise_paths_gcovr paths)
+function(_normalise_paths_gcovr_regex paths)
   set(new_paths)
   foreach(path IN LISTS ${paths})
     # Escape special chars
@@ -66,12 +61,7 @@ function(_setup_coverage_lcov coverage_target cov_executable)
     return()
   endif()
 
-  find_program(LCOV_EXECUTABLE NAMES lcov)
-  find_program(GENHTML_EXECUTABLE NAMES genhtml)
-  find_package_handle_standard_args(LCov
-    REQUIRED_VARS LCOV_EXECUTABLE GENHTML_EXECUTABLE
-  )
-  mark_as_advanced(LCOV_EXECUTABLE GENHTML_EXECUTABLE)
+  find_package(LCov 1.14)
   if(NOT LCov_FOUND)
     return()
   endif()
@@ -83,9 +73,6 @@ function(_setup_coverage_lcov coverage_target cov_executable)
   cmake_parse_arguments(options
     "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN}
   )
-
-  _normalise_paths(options_FILTERS)
-  _normalise_paths(options_EXCLUDE)
 
   if(options_FILTERS)
     set(tmp "")
@@ -126,7 +113,7 @@ function(_setup_coverage_lcov coverage_target cov_executable)
 
   set(lcov_args_capture)
   list(APPEND lcov_args_capture --capture)
-  list(APPEND lcov_args_capture --gcov-tool=${GCOV_EXECUTABLE})
+  list(APPEND lcov_args_capture --gcov-tool=${cov_executable})
   list(APPEND lcov_args_capture --output-file=${output}.info)
   list(APPEND lcov_args_capture --directory=${PROJECT_BINARY_DIR}/)
   list(APPEND lcov_args_capture ${options_FILTERS})
@@ -181,9 +168,7 @@ function(_setup_coverage_gcovr coverage_target cov_executable)
     return()
   endif()
 
-  find_program(GCOVR_EXECUTABLE NAMES gcovr)
-  find_package_handle_standard_args(GCovr REQUIRED_VARS GCOVR_EXECUTABLE)
-  mark_as_advanced(GCOVR_EXECUTABLE)
+  find_package(GCovr 4.2)
   if(NOT GCovr_FOUND)
     return()
   endif()
@@ -196,10 +181,10 @@ function(_setup_coverage_gcovr coverage_target cov_executable)
     "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN}
   )
 
-  _normalise_paths(options_FILTERS)
-  _normalise_paths(options_EXCLUDE)
-  _normalise_paths_gcovr(options_FILTERS)
-  _normalise_paths_gcovr(options_EXCLUDE)
+  _normalise_paths_gcovr_realpath(options_FILTERS)
+  _normalise_paths_gcovr_realpath(options_EXCLUDE)
+  _normalise_paths_gcovr_regex(options_FILTERS)
+  _normalise_paths_gcovr_regex(options_EXCLUDE)
 
   if(options_FILTERS)
     set(tmp "")
@@ -226,8 +211,6 @@ function(_setup_coverage_gcovr coverage_target cov_executable)
   file(MAKE_DIRECTORY "${output_dir}")
 
   set(root_dir "${PROJECT_SOURCE_DIR}")
-  _normalise_paths(root_dir)
-  _normalise_paths_gcovr(root_dir)
 
   set(gcovr_args)
   list(APPEND gcovr_args --gcov-executable=${cov_executable})
@@ -239,6 +222,9 @@ function(_setup_coverage_gcovr coverage_target cov_executable)
   list(APPEND gcovr_args --delete)
   list(APPEND gcovr_args --print-summary)
   list(APPEND gcovr_args --exclude-unreachable-branches)
+  list(APPEND gcovr_args --exclude-throw-branches)
+  list(APPEND gcovr_args --html-medium-threshold=80.0)
+  list(APPEND gcovr_args --html-high-threshold=90.0)
 
   include(ProcessorCount)
   ProcessorCount(N)
@@ -272,23 +258,15 @@ function(_setup_coverage_gcovr coverage_target cov_executable)
 endfunction()
 
 function(setup_coverage)
-  include(FindPackageHandleStandardArgs)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    find_program(LLVM_COV_EXECUTABLE NAMES llvm-cov)
-    find_package_handle_standard_args(LLVMCov REQUIRED_VARS LLVM_COV_EXECUTABLE)
-    mark_as_advanced(LLVM_COV_EXECUTABLE)
-    if(LLVMCov_FOUND)
+    find_package(LlvmCov)
+    if(LlvmCov_FOUND)
       set(cov_executable "${LLVM_COV_EXECUTABLE} gcov")
     endif()
   endif()
 
   if(NOT cov_executable)
-    find_program(GCOV_EXECUTABLE
-      NAMES ${_CMAKE_TOOLCHAIN_PREFIX}gcov${_CMAKE_TOOLCHAIN_SUFFIX}
-      HINTS ${_CMAKE_TOOLCHAIN_LOCATION}
-    )
-    find_package_handle_standard_args(GCov REQUIRED_VARS GCOV_EXECUTABLE)
-    mark_as_advanced(GCOV_EXECUTABLE)
+    find_package(GCov)
     if(GCov_FOUND)
       set(cov_executable "${GCOV_EXECUTABLE}")
     endif()
