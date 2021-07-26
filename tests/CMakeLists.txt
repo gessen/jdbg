@@ -16,7 +16,7 @@ target_compile_options(${PROJECT_NAME}-tests
     # Additional warnings not included in -Wall -Wextra -Wpedantic
     -Wformat
     $<$<CXX_COMPILER_ID:Clang>:-Wformat-pedantic>
-    $<$<CXX_COMPILER_ID:GNU>:-Woverloaded-virtual>
+    -Woverloaded-virtual
     -Wold-style-cast
     # Increased reliability of backtraces
     -fasynchronous-unwind-tables

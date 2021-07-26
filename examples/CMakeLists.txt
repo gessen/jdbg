@@ -9,7 +9,7 @@ target_compile_options(${PROJECT_NAME}-examples
     # Additional warnings not included in -Wall -Wextra -Wpedantic
     -Wformat
     $<$<CXX_COMPILER_ID:Clang>:-Wformat-pedantic>
-    $<$<CXX_COMPILER_ID:GNU>:-Woverloaded-virtual>
+    -Woverloaded-virtual
     -Wold-style-cast
     # Don't warn about not handled values in a switch
     -Wno-switch
