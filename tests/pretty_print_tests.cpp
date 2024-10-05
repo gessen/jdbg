@@ -4,17 +4,15 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <utility>
+#include <variant>
 #include <vector>
 
-#if __cplusplus >= 201703L
-#include <optional>
-#include <string_view>
-#include <variant>
-#endif
 
 using namespace Catch;
 
@@ -146,7 +144,6 @@ TEST_CASE("pretty print")
     CHECK_THAT(pretty_print(ptr1), EndsWith(" -> \"qwe\" (refs: 2)"));
   }
 
-#if __cplusplus >= 201703L
   SECTION("std::string_view")
   {
     using namespace std::string_view_literals;
@@ -166,7 +163,6 @@ TEST_CASE("pretty print")
     std::variant<int, double, std::string> var{"foo"};
     CHECK_THAT(pretty_print(var), Equals("{\"foo\"}"));
   }
-#endif
 
   SECTION("user defined type")
   {

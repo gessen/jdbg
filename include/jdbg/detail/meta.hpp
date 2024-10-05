@@ -39,7 +39,7 @@ constexpr auto size(const T& c) -> decltype(c.size())
 }
 
 template <typename T, std::size_t N>
-constexpr std::size_t size(const T (&/*unused*/)[N])
+constexpr std::size_t size(const T (& /*unused*/)[N])
 {
   return N;
 }
@@ -59,12 +59,8 @@ struct is_container : is_detected<container_t, T> {};
 template <typename Ch, typename Tr, typename Al>
 struct is_container<std::basic_string<Ch, Tr, Al>> : std::false_type {};
 
-#if __cplusplus >= 201703L
-
 template <typename Ch, typename Tr>
 struct is_container<std::basic_string_view<Ch, Tr>> : std::false_type {};
-
-#endif
 
 template <typename T>
 struct has_ostream_operator : is_detected<ostream_operator_t, T> {};

@@ -1,6 +1,5 @@
 set(CPACK_PACKAGE_VENDOR "Jacek Swierk")
 set(CPACK_PACKAGE_CONTACT "Jacek Swierk <jacek.swierk@gmail.com>")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A helpful debugging macro")
 set(CPACK_PROJECT_URL "https://github.com/gessen/jdbg")
 set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.md")

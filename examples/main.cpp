@@ -2,23 +2,17 @@
 
 #include <limits>
 #include <map>
-#include <memory>
-#include <string>
-#include <vector>
-
-#if __cplusplus >= 201703L
 #include <optional>
+#include <string>
 #include <string_view>
-#endif
+#include <vector>
 
 namespace {
 
 struct my_struct {
   int i{};
   std::map<std::string, std::vector<std::string>> m;
-#if __cplusplus >= 201703L
   std::optional<char> o;
-#endif
 };
 
 std::ostream& operator<<(std::ostream& os, const my_struct& ms)
@@ -26,10 +20,8 @@ std::ostream& operator<<(std::ostream& os, const my_struct& ms)
   jdbg::pretty_print(os, ms.i);
   os << ", ";
   jdbg::pretty_print(os, ms.m);
-#if __cplusplus >= 201703L
   os << ", ";
   jdbg::pretty_print(os, ms.o);
-#endif
   return os;
 }
 
@@ -52,14 +44,12 @@ int main()
   };
   dbg(m);
 
-#if __cplusplus >= 201703L
   std::optional<std::string> str;
   dbg(str);
   str = "bar";
 
   const std::string_view sv = dbg(*str);
   dbg(sv);
-#endif
 
   enum class my_enum {
     one,
@@ -79,8 +69,6 @@ int main()
   ms.m.emplace("one", std::vector<std::string>{"o", "n", "e"});
   ms.m.emplace("two", std::vector<std::string>{"t", "w", "o"});
   ms.m.emplace("three", std::vector<std::string>{"t", "h", "r", "e", "e"});
-#if __cplusplus >= 201703L
   ms.o = 'x';
-#endif
   dbg(ms);
 }

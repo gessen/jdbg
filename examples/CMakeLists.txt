@@ -1,5 +1,10 @@
 add_executable(${PROJECT_NAME}-examples)
 
+target_compile_features(${PROJECT_NAME}-tests
+  PRIVATE
+    cxx_std_17
+)
+
 target_compile_options(${PROJECT_NAME}-examples
   PRIVATE
     # Standard set of warnings

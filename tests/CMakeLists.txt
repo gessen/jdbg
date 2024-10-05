@@ -4,7 +4,7 @@ include(AddCatch)
 
 target_compile_features(${PROJECT_NAME}-tests
   PRIVATE
-    cxx_std_14
+    cxx_std_17
 )
 
 target_compile_options(${PROJECT_NAME}-tests
@@ -30,11 +30,6 @@ target_compile_options(${PROJECT_NAME}-tests
     # Enable coverage
     $<$<BOOL:${JDBG_ENABLE_COVERAGE}>:--coverage>
 )
-
-# Emit header dependencies (Ninja does it automatically)
-if(NOT CMAKE_GENERATOR MATCHES Ninja)
-  target_compile_options(${PROJECT_NAME}-tests PRIVATE -MMD)
-endif()
 
 target_link_options(${PROJECT_NAME}-tests
   PRIVATE
@@ -63,17 +58,15 @@ target_sources(${PROJECT_NAME}-tests
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
-if (COMMAND target_precompile_headers)
-  configure_file(
-    "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}_pch.hpp.in"
+configure_file(
+  "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}_pch.hpp.in"
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}_pch.hpp"
+  @ONLY
+)
+target_precompile_headers(${PROJECT_NAME}-tests
+  PRIVATE
     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}_pch.hpp"
-    @ONLY
-  )
-  target_precompile_headers(${PROJECT_NAME}-tests
-    PRIVATE
-      "${PROJECT_BINARY_DIR}/${PROJECT_NAME}_pch.hpp"
-  )
-endif()
+)
 
 include(Catch)
 catch_discover_tests(${PROJECT_NAME}-tests)

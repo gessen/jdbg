@@ -3,16 +3,14 @@
 #include <catch2/catch.hpp>
 
 #include <map>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <utility>
+#include <variant>
 #include <vector>
 
-#if __cplusplus >= 201703L
-#include <optional>
-#include <string_view>
-#include <variant>
-#endif
 
 using namespace Catch;
 
@@ -82,14 +80,12 @@ TEST_CASE("get type name")
     CHECK_THAT(
         (get_type_name<std::tuple<std::string, std::map<int, double>>>()),
         Equals("std::tuple<std::string, std::map<int, double>>"));
-#if __cplusplus >= 201703L
     CHECK_THAT(get_type_name<std::string_view>(), Equals("std::string_view"));
     CHECK_THAT(get_type_name<std::optional<std::vector<std::string>>>(),
                Equals("std::optional<std::vector<std::string>>"));
     CHECK_THAT((get_type_name<
                    std::variant<int, std::string, std::optional<double>>>()),
                Equals("std::variant<int, std::string, std::optional<double>>"));
-#endif
   }
 
   SECTION("user defined types")

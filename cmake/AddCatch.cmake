@@ -10,11 +10,4 @@ FetchContent_Declare(Catch2
   GIT_SHALLOW TRUE
 )
 
-FetchContent_GetProperties(Catch2)
-if(NOT catch2_POPULATED)
-  message(STATUS "Downloading Catch2")
-  FetchContent_Populate(Catch2)
-  message(STATUS "Downloading Catch2 - done")
-  add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-  list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/contrib")
-endif()
+FetchContent_MakeAvailable(Catch2)

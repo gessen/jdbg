@@ -4,15 +4,12 @@
 
 #include <iomanip>
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
-#include <type_traits>
-
-#if __cplusplus >= 201703L
-#include <optional>
 #include <string_view>
+#include <type_traits>
 #include <variant>
-#endif
 
 namespace jdbg {
 
@@ -48,9 +45,7 @@ inline void pretty_print(std::ostream& os, const char* const& val);
 
 inline void pretty_print(std::ostream& os, const std::string& val);
 
-#if __cplusplus >= 201703L
 inline void pretty_print(std::ostream& os, std::string_view val);
-#endif
 
 template <typename P>
 void pretty_print(std::ostream& os, P* const& val);
@@ -79,13 +74,11 @@ template <typename Container>
 std::enable_if_t<detail::is_container<Container>::value, void>
 pretty_print(std::ostream& os, const Container& val);
 
-#if __cplusplus >= 201703L
 template <typename T>
 void pretty_print(std::ostream& os, const std::optional<T>& val);
 
 template <typename... Ts>
 void pretty_print(std::ostream& os, const std::variant<Ts...>& val);
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -124,12 +117,10 @@ inline void pretty_print(std::ostream& os, const std::string& val)
   os << '"' << val << '"';
 }
 
-#if __cplusplus >= 201703L
 inline void pretty_print(std::ostream& os, std::string_view val)
 {
   os << '"' << val << '"';
 }
-#endif
 
 template <typename P>
 void pretty_print(std::ostream& os, P* const& val)
@@ -243,7 +234,6 @@ pretty_print(std::ostream& os, const Container& val)
   os << "]";
 }
 
-#if __cplusplus >= 201703L
 template <typename T>
 void pretty_print(std::ostream& os, const std::optional<T>& val)
 {
@@ -261,6 +251,5 @@ void pretty_print(std::ostream& os, const std::variant<Ts...>& val)
   std::visit([&](auto&& arg) { pretty_print(os, arg); }, val);
   os << '}';
 }
-#endif
 
 } // namespace jdbg

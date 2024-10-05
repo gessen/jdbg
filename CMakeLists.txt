@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.29)
 
 # Set CMake modules path
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -8,6 +8,7 @@ include(HandleBuildType)
 project(jdbg
   VERSION 0.1.0
   LANGUAGES CXX
+  DESCRIPTION "A helpful debugging macro"
 )
 
 option(JDBG_BUILD_TESTING "Build jdbg testing tree." ${MASTER_PROJECT})

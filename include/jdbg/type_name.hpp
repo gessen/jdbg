@@ -2,19 +2,16 @@
 
 #include <cstddef>
 #include <map>
+#include <optional>
 #include <set>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
-#include <vector>
-
-#if __cplusplus >= 201703L
-#include <optional>
-#include <string_view>
 #include <variant>
-#endif
+#include <vector>
 
 namespace jdbg {
 namespace detail {
@@ -106,16 +103,14 @@ inline std::string get_type_name_impl(type_tag<std::string> /*unused*/)
   return "std::string";
 }
 
-#if __cplusplus >= 201703L
 inline std::string get_type_name_impl(type_tag<std::string_view> /*unused*/)
 {
   return "std::string_view";
 }
-#endif
 
 template <typename T>
 std::string
-    get_type_name_impl(type_tag<std::vector<T, std::allocator<T>>> /*unused*/)
+get_type_name_impl(type_tag<std::vector<T, std::allocator<T>>> /*unused*/)
 {
   return "std::vector<" + get_type_name<T>() + ">";
 }
@@ -175,7 +170,6 @@ std::string get_type_name_impl(type_tag<std::tuple<Ts...>> /*unused*/)
          ">";
 }
 
-#if __cplusplus >= 201703L
 template <typename T>
 inline std::string get_type_name_impl(type_tag<std::optional<T>> /*unused*/)
 {
@@ -190,7 +184,6 @@ std::string get_type_name_impl(type_tag<std::variant<Ts...>> /*unused*/)
              std::index_sequence_for<Ts...>{}) +
          ">";
 }
-#endif
 
 } // namespace jdbg
 

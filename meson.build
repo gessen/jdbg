@@ -1,8 +1,9 @@
 project('jdbg', 'cpp',
   version: '0.1.0',
+  license: 'MIT',
   default_options: [
+    'cpp_std=c++17',
     'warning_level=3',
-    'cpp_std=c++17'
   ],
 )
 
@@ -12,8 +13,8 @@ if get_option('warning_level').to_int() >= 2
   extra_args += [
     '-Wformat',
     '-Wformat-pedantic',
-    '-Wold-style-cast',
     '-Woverloaded-virtual',
+    '-Wold-style-cast',
   ]
 endif
 
@@ -43,7 +44,10 @@ if get_option('build_examples')
   subdir('examples')
 endif
 
-install_subdir('include/' + project_name, install_dir: get_option('includedir'))
+install_subdir('include',
+  install_dir: get_option('includedir'),
+  strip_directory: true,
+)
 
 pkg = import('pkgconfig')
 pkg.generate(
