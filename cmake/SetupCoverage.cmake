@@ -44,9 +44,7 @@ function(setup_coverage)
     if(LlvmCov_FOUND)
       set(cov_executable "${LLVM_COV_EXECUTABLE} gcov")
     endif()
-  endif()
-
-  if(NOT cov_executable)
+  else()
     find_package(GCov)
     if(GCov_FOUND)
       set(cov_executable "${GCOV_EXECUTABLE}")
@@ -68,7 +66,7 @@ function(setup_coverage)
 
   set(output_dir "${PROJECT_BINARY_DIR}/coverage")
   file(MAKE_DIRECTORY "${output_dir}")
-  
+
   set(gcovr_args)
   list(APPEND gcovr_args --gcov-executable=${cov_executable})
   list(APPEND gcovr_args --root=${PROJECT_SOURCE_DIR})
