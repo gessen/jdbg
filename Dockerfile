@@ -24,14 +24,13 @@ RUN apt-get update \
  && echo "deb http://apt.llvm.org/unstable/ llvm-toolchain main" >> /etc/apt/sources.list \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
-    clang-13 \
-    clang-format-13 \
-    clang-tidy-13 \
-    libc++-13-dev \
-    libc++abi-13-dev \
-    lld-13 \
-    llvm-13 \
- && apt-get clean \
+    clang \
+    clang-format \
+    clang-tidy \
+    libc++-dev \
+    libc++abi-dev \
+    lld \
+    llvm \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/jdbg
