@@ -2,11 +2,13 @@
 
 #include <cstddef>
 #include <map>
+#include <memory>
 #include <optional>
 #include <set>
 #include <string>
 #include <string_view>
 #include <tuple>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -54,46 +56,46 @@ std::string get_type_name_impl(type_tag<T> /*unused*/)
 template <typename T>
 std::string get_type_name()
 {
-  if (std::is_const<T>::value) {
-    if (std::is_pointer<T>::value) {
+  if (std::is_const_v<T>) {
+    if (std::is_pointer_v<T>) {
       return get_type_name<std::remove_const_t<T>>() + " const";
     }
     return "const " + get_type_name<std::remove_const_t<T>>();
   }
-  if (std::is_volatile<T>::value) {
-    if (std::is_pointer<T>::value) {
+  if (std::is_volatile_v<T>) {
+    if (std::is_pointer_v<T>) {
       return get_type_name<std::remove_volatile_t<T>>() + " volatile";
     }
     return "volatile " + get_type_name<std::remove_volatile_t<T>>();
   }
-  if (std::is_pointer<T>::value) {
+  if (std::is_pointer_v<T>) {
     return get_type_name<std::remove_pointer_t<T>>() + "*";
   }
-  if (std::is_lvalue_reference<T>::value) {
+  if (std::is_lvalue_reference_v<T>) {
     return get_type_name<std::remove_reference_t<T>>() + "&";
   }
-  if (std::is_rvalue_reference<T>::value) {
+  if (std::is_rvalue_reference_v<T>) {
     return get_type_name<std::remove_reference_t<T>>() + "&&";
   }
   return get_type_name_impl(type_tag<T>{});
 }
 
-inline std::string get_type_name_impl(type_tag<short>)
+inline std::string get_type_name_impl(type_tag<short> /*unused*/)
 {
   return "short";
 }
 
-inline std::string get_type_name_impl(type_tag<unsigned short>)
+inline std::string get_type_name_impl(type_tag<unsigned short> /*unused*/)
 {
   return "unsigned short";
 }
 
-inline std::string get_type_name_impl(type_tag<long>)
+inline std::string get_type_name_impl(type_tag<long> /*unused*/)
 {
   return "long";
 }
 
-inline std::string get_type_name_impl(type_tag<unsigned long>)
+inline std::string get_type_name_impl(type_tag<unsigned long> /*unused*/)
 {
   return "unsigned long";
 }

@@ -2,13 +2,17 @@
 
 #include <jdbg/detail/meta.hpp>
 
+#include <cstddef>
 #include <iomanip>
+#include <ios>
 #include <memory>
 #include <optional>
 #include <ostream>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <type_traits>
+#include <utility>
 #include <variant>
 
 namespace jdbg {
@@ -30,8 +34,7 @@ void pretty_print(std::ostream& /*os*/, const T& /*val*/,
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-std::enable_if_t<!detail::is_container<T>::value && !std::is_enum<T>::value,
-                 void>
+std::enable_if_t<!detail::is_container<T>::value && !std::is_enum_v<T>, void>
 pretty_print(std::ostream& os, const T& val);
 
 inline void pretty_print(std::ostream& os, const bool& val);
@@ -67,8 +70,8 @@ template <typename... Ts>
 void pretty_print(std::ostream& os, const std::tuple<Ts...>& val);
 
 template <typename E>
-std::enable_if_t<std::is_enum<E>::value, void> pretty_print(std::ostream& os,
-                                                            const E& val);
+std::enable_if_t<std::is_enum_v<E>, void> pretty_print(std::ostream& os,
+                                                       const E& val);
 
 template <typename Container>
 std::enable_if_t<detail::is_container<Container>::value, void>
@@ -83,8 +86,7 @@ void pretty_print(std::ostream& os, const std::variant<Ts...>& val);
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-std::enable_if_t<!detail::is_container<T>::value && !std::is_enum<T>::value,
-                 void>
+std::enable_if_t<!detail::is_container<T>::value && !std::is_enum_v<T>, void>
 pretty_print(std::ostream& os, const T& val)
 {
   pretty_print(os, val, detail::has_ostream_operator<T>{});
@@ -197,8 +199,8 @@ void pretty_print(std::ostream& os, const std::tuple<Ts...>& val)
 }
 
 template <typename E>
-std::enable_if_t<std::is_enum<E>::value, void> pretty_print(std::ostream& os,
-                                                            const E& val)
+std::enable_if_t<std::is_enum_v<E>, void> pretty_print(std::ostream& os,
+                                                       const E& val)
 {
   os << static_cast<std::underlying_type_t<E>>(val);
 }

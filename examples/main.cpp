@@ -1,8 +1,11 @@
 #include <jdbg/jdbg.hpp>
+#include <jdbg/pretty_print.hpp>
 
+#include <cstdint>
 #include <limits>
 #include <map>
 #include <optional>
+#include <ostream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -51,7 +54,7 @@ int main()
   const std::string_view sv = dbg(*str);
   dbg(sv);
 
-  enum class my_enum {
+  enum class my_enum : std::uint8_t {
     one,
     two,
     three,

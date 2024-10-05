@@ -1,11 +1,14 @@
 #include <jdbg/pretty_print.hpp>
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <cstddef>
 #include <map>
 #include <memory>
 #include <optional>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -36,7 +39,7 @@ std::ostream& operator<<(std::ostream& os, const my_struct& ms)
   return os;
 }
 
-enum class my_enum {
+enum class my_enum { // NOLINT
   e1 = 13,
   e2 = 37,
 };
@@ -80,7 +83,7 @@ TEST_CASE("pretty print")
   SECTION("std::string")
   {
     using namespace std::string_literals;
-    CHECK_THAT(pretty_print("foo"s), Equals("\"foo\""));
+    CHECK_THAT(pretty_print("foo"s), Equals("\"foo\"")); // NOLINT
   }
 
   SECTION("std::vector")
@@ -140,7 +143,7 @@ TEST_CASE("pretty print")
     CHECK_THAT(pretty_print(std::shared_ptr<int>{}),
                Equals("nullptr (refs: 0)"));
     const auto ptr1 = std::make_shared<std::string>("qwe");
-    const auto ptr2 = ptr1;
+    const auto ptr2 = ptr1; // NOLINT
     CHECK_THAT(pretty_print(ptr1), EndsWith(" -> \"qwe\" (refs: 2)"));
   }
 
@@ -160,13 +163,13 @@ TEST_CASE("pretty print")
 
   SECTION("std::variant")
   {
-    std::variant<int, double, std::string> var{"foo"};
+    const std::variant<int, double, std::string> var{"foo"};
     CHECK_THAT(pretty_print(var), Equals("{\"foo\"}"));
   }
 
   SECTION("user defined type")
   {
-    my_struct ms{9001};
+    const my_struct ms{9001};
     CHECK_THAT(pretty_print(ms), Equals("my_struct{9001}"));
   }
 

@@ -1,12 +1,16 @@
 #define JDBG_LOG_FUNCTION(str) std::cerr << (str)
 #define JDBG_IS_OUTPUT_COLOURED (false)
 #include <jdbg/jdbg.hpp>
+#include <jdbg/type_name.hpp>
 
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_all.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <iostream>
 #include <ostream>
 #include <sstream>
+#include <streambuf>
 #include <string>
 #include <utility>
 #include <vector>
@@ -66,7 +70,7 @@ TEST_CASE_METHOD(jdbg_tests, "dbg macro")
   {
     int i = 13;
     constexpr int j = 37;
-    const int k = dbg(++i) + j;
+    const int k = dbg(++i) + j; // NOLINT
 
     CHECK(k == i + j);
     CHECK_THAT(output.str(), ContainsSubstring("++i:"));

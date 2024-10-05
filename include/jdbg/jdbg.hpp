@@ -1,13 +1,12 @@
 #pragma once
 
-#include <jdbg/detail/meta.hpp>
 #include <jdbg/pretty_print.hpp>
-#include <jdbg/type_name.hpp>
+#include <jdbg/type_name.hpp> // NOLINT
 
+#include <cstdio>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <type_traits>
 #include <utility>
 
 #include <unistd.h>
@@ -17,17 +16,17 @@
 #endif
 
 #ifndef JDBG_IS_OUTPUT_COLOURED
-#define JDBG_IS_OUTPUT_COLOURED (isatty(fileno(stderr)) != 0)
+#define JDBG_IS_OUTPUT_COLOURED (isatty(fileno(stderr)) != 0) // NOLINT
 #endif
 
-namespace jdbg {
-namespace detail {
+namespace jdbg::detail {
 
 class output {
 public:
-  output(const char* file, int line, const char* func, const char* expr)
-      : file_{file}, line_{line}, func_{func}, expr_{expr},
-        is_coloured_{JDBG_IS_OUTPUT_COLOURED}
+  output(const char* file, int line, const char* func, // NOLINT
+         const char* expr)
+      : file_{file}, line_{line}, func_{func}, expr_{expr}
+
   {
     const auto leaf_indicator = file_.find_last_of('/');
     if (leaf_indicator != std::string::npos) {
@@ -102,10 +101,10 @@ private:
   static constexpr const char* const ansi_reset = "\x1b[0m";
 
   std::string file_;
-  const int line_;
-  const std::string func_;
-  const std::string expr_;
-  const bool is_coloured_;
+  int line_;
+  std::string func_;
+  std::string expr_;
+  bool is_coloured_{JDBG_IS_OUTPUT_COLOURED};
 };
 
 template <typename T>
@@ -114,8 +113,7 @@ T&& forward(T&& t)
   return std::forward<T>(t);
 }
 
-} // namespace detail
-} // namespace jdbg
+} // namespace jdbg::detail
 
 #ifndef JDBG_DISABLE
 #define dbg(...)                                                               \

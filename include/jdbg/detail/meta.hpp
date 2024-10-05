@@ -1,11 +1,13 @@
 #pragma once
 
+#include <cstddef>
 #include <iosfwd>
 #include <iterator>
+#include <string>
+#include <string_view>
 #include <type_traits>
 
-namespace jdbg {
-namespace detail {
+namespace jdbg::detail {
 
 struct nonesuch {
   ~nonesuch() = delete;
@@ -65,5 +67,4 @@ struct is_container<std::basic_string_view<Ch, Tr>> : std::false_type {};
 template <typename T>
 struct has_ostream_operator : is_detected<ostream_operator_t, T> {};
 
-} // namespace detail
-} // namespace jdbg
+} // namespace jdbg::detail
