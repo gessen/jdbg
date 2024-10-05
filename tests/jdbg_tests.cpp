@@ -2,7 +2,8 @@
 #define JDBG_IS_OUTPUT_COLOURED (false)
 #include <jdbg/jdbg.hpp>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 
 #include <ostream>
 #include <sstream>
@@ -10,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-using namespace Catch;
+using namespace Catch::Matchers;
 
 namespace {
 
@@ -68,9 +69,10 @@ TEST_CASE_METHOD(jdbg_tests, "dbg macro")
     const int k = dbg(++i) + j;
 
     CHECK(k == i + j);
-    CHECK_THAT(output.str(), Contains("i:"));
-    CHECK_THAT(output.str(), Contains(std::to_string(i)));
-    CHECK_THAT(output.str(), Contains(jdbg::get_type_name<decltype(i)>()));
+    CHECK_THAT(output.str(), ContainsSubstring("++i:"));
+    CHECK_THAT(output.str(), ContainsSubstring(std::to_string(i)));
+    CHECK_THAT(output.str(),
+               ContainsSubstring(jdbg::get_type_name<decltype(i)>()));
   }
 
   SECTION("part of container")
@@ -82,6 +84,6 @@ TEST_CASE_METHOD(jdbg_tests, "dbg macro")
     };
 
     CHECK_THAT(v[1], Equals("two"));
-    CHECK_THAT(output.str(), Contains("\"two\""));
+    CHECK_THAT(output.str(), ContainsSubstring("\"two\""));
   }
 }

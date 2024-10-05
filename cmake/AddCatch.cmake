@@ -6,7 +6,7 @@ endif()
 include(FetchContent)
 FetchContent_Declare(Catch2
   GIT_REPOSITORY https://github.com/catchorg/catch2
-  GIT_TAG v2.11.0
+  GIT_TAG v3.7.1
   GIT_SHALLOW TRUE
 )
 

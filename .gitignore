@@ -20,15 +20,15 @@
 /CPackConfig.cmake
 /CPackSourceConfig.cmake
 
+# Meson
+/subprojects/**/
+
 # Visual Studio Code
 /.settings/
 /.vscode/
 
-# ccls
-/.ccls-cache/
-
 # clangd
-/.clangd/
+/.cache/
 
 # GDB
 /.gdb_history

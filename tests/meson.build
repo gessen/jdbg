@@ -1,10 +1,12 @@
-catch_dep = dependency('catch2')
+catch2_dep = dependency('catch2-with-main',
+  default_options: ['tests=false'],
+  version: '>=3',
+)
 
 jdbg_tests_src = [
   'jdbg_tests.cpp',
   'pretty_print_tests.cpp',
   'type_name_tests.cpp',
-  'main.cpp',
 ]
 
 configure_file(
@@ -15,7 +17,7 @@ configure_file(
 
 jdbg_tests = executable('jdbg-tests',
   sources: jdbg_tests_src,
-  dependencies: [jdbg_dep, catch_dep],
+  dependencies: [jdbg_dep, catch2_dep],
   cpp_pch: meson.current_build_dir() + '/' + project_name + '_pch.hpp',
 )
 

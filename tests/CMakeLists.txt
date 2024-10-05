@@ -39,7 +39,7 @@ target_link_options(${PROJECT_NAME}-tests
 target_link_libraries(${PROJECT_NAME}-tests
   PRIVATE
     jdbg::jdbg
-    Catch2::Catch2
+    Catch2::Catch2WithMain
 )
 
 set_target_properties(${PROJECT_NAME}-tests
@@ -55,7 +55,6 @@ target_sources(${PROJECT_NAME}-tests
     ${CMAKE_CURRENT_LIST_DIR}/jdbg_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/pretty_print_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/type_name_tests.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
 configure_file(
