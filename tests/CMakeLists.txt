@@ -85,9 +85,5 @@ add_custom_target(${check_target}
 
 if(JDBG_ENABLE_COVERAGE)
   include(SetupCoverage)
-  setup_coverage(
-    POST_TARGET ${check_target}
-    FILTERS
-      "${PROJECT_SOURCE_DIR}/include"
-  )
+  setup_coverage()
 endif()
