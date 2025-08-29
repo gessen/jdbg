@@ -37,7 +37,6 @@
 /.git
 /.gitignore
 /.gitattributes
-/.travis.yml
 /Dockerfile
 /docker-compose
 /.dockerignore
