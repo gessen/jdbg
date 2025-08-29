@@ -46,7 +46,7 @@ jobs:
       run: ctest
 
     - name: Coverage
-      run: cmake --build ${{github.workspace}}/build --target coverage
+      run: cmake --build ${{github.workspace}}/build --target coverage-html
 
     - name: Install
       run: cmake --install ${{github.workspace}}/build --prefix prefix
