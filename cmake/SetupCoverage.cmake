@@ -1,11 +1,3 @@
-if(JDBG_ENABLE_COVERAGE)
-  if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(WARNING
-      "Code coverage results with an optimized build may be misleading"
-    )
-  endif()
-endif()
-
 function(_setup_coverage_html target exec args output_dir)
   set(output_file "${output_dir}/index.html")
   list(APPEND args --output="${output_file}")
