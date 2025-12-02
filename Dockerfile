@@ -18,10 +18,13 @@ RUN apt-get update \
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     ca-certificates \
+    curl \
     gnupg \
-    wget \
- && wget -q -O - http://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
- && echo "deb http://apt.llvm.org/unstable/ llvm-toolchain main" >> /etc/apt/sources.list \
+ && gpg --list-keys \
+ && curl -L "http://apt.llvm.org/llvm-snapshot.gpg.key" \
+  | gpg --dearmor > /etc/apt/keyrings/llvm.gpg \
+ && echo "deb [signed-by=/etc/apt/keyrings/llvm.gpg] http://apt.llvm.org/unstable/ llvm-toolchain main" \
+  | tee /etc/apt/sources.list.d/llvm.list \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
     clang \
