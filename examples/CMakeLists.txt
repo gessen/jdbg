@@ -1,6 +1,6 @@
 add_executable(${PROJECT_NAME}-examples)
 
-target_compile_features(${PROJECT_NAME}-tests
+target_compile_features(${PROJECT_NAME}-examples
   PRIVATE
     cxx_std_17
 )
