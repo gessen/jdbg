@@ -1,10 +1,5 @@
 add_executable(${PROJECT_NAME}-examples)
 
-target_compile_features(${PROJECT_NAME}-examples
-  PRIVATE
-    cxx_std_17
-)
-
 target_compile_options(${PROJECT_NAME}-examples
   PRIVATE
     # Standard set of warnings
@@ -37,11 +32,6 @@ endif()
 target_link_libraries(${PROJECT_NAME}-examples
   PRIVATE
     jdbg::jdbg
-)
-
-set_target_properties(${PROJECT_NAME}-examples
-  PROPERTIES
-    CXX_EXTENSIONS OFF
 )
 
 target_sources(${PROJECT_NAME}-examples

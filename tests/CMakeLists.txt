@@ -2,11 +2,6 @@ add_executable(${PROJECT_NAME}-tests)
 
 include(AddCatch)
 
-target_compile_features(${PROJECT_NAME}-tests
-  PRIVATE
-    cxx_std_17
-)
-
 target_compile_options(${PROJECT_NAME}-tests
   PRIVATE
     # Standard set of warnings
@@ -40,11 +35,6 @@ target_link_libraries(${PROJECT_NAME}-tests
   PRIVATE
     jdbg::jdbg
     Catch2::Catch2WithMain
-)
-
-set_target_properties(${PROJECT_NAME}-tests
-  PROPERTIES
-    CXX_EXTENSIONS OFF
 )
 
 target_sources(${PROJECT_NAME}-tests
